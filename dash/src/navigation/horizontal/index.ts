@@ -66,6 +66,30 @@ const navigation = (): HorizontalNavItemsType => {
           ]
         },
         {
+          title: 'Products',
+          icon: 'tabler:file-dollar',
+          path: '/apps/products/list'
+
+          // children: [
+          //   {
+          //     title: 'List',
+          //     path: '/apps/invoice/list'
+          //   },
+          //   {
+          //     title: 'Preview',
+          //     path: '/apps/invoice/preview'
+          //   },
+          //   {
+          //     title: 'Edit',
+          //     path: '/apps/invoice/edit'
+          //   },
+          //   {
+          //     title: 'Add',
+          //     path: '/apps/invoice/add'
+          //   }
+          // ]
+        },
+        {
           title: 'User',
           icon: 'tabler:user',
           children: [
@@ -131,7 +155,7 @@ const navigation = (): HorizontalNavItemsType => {
           icon: 'tabler:brand-tabler'
         },
         {
-          
+
           title: 'Cards',
           icon: 'tabler:id',
           children: [
