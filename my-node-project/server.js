@@ -1,6 +1,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./src/config/db');
+const cors = require('cors');
+
 const productRoutes = require('./src/routes/productRoutes');
 const reviewRoutes = require('./src/routes/reviewRoutes');
 const userRoutes = require('./src/routes/userRoutes');
@@ -17,6 +19,12 @@ connectDB();
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // دعم البيانات المرسلة من النماذج
+
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 
 // Routes
 app.use('/api/users', userRoutes);

@@ -35,16 +35,29 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
+        
+        // Check if user exists
         const user = await User.findOne({ email });
-        if (!user || !(await user.comparePassword(password))) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+        if (!user) {
+            return res.status(400).json({ message: 'Email is not registered' });
         }
+
+        // Check if password is correct
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Incorrect password' });
+        }
+
+        // Generate token and return user data
         const token = user.generateAuthToken();
         res.json({ user, token });
+
     } catch (error) {
-        res.status(500).json({ message: 'Login failed' });
+        console.error('❌ Login error:', error);
+        res.status(500).json({ message: 'An unexpected error occurred during login' });
     }
 };
+
 
 const deleteUser = async (req, res) => {
     try {

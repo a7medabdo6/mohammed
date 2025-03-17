@@ -16,6 +16,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
 import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
+import { useDispatch, useSelector } from 'react-redux';
 
 // ** Custom Component Import
 import CustomTextField from 'src/@core/components/mui/text-field'
@@ -41,6 +42,9 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
+import { loginUser } from 'src/store/apps/auth/authSlice'
+import { log } from 'console'
+import { AppDispatch, RootState } from 'src/store'
 
 // ** Styled Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -104,6 +108,8 @@ const LoginPage = () => {
   const theme = useTheme()
   const bgColors = useBgColor()
   const { settings } = useSettings()
+  const dispatch = useDispatch();
+
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
 
   // ** Vars
@@ -119,16 +125,42 @@ const LoginPage = () => {
     mode: 'onBlur',
     resolver: yupResolver(schema)
   })
+  const { loading, error } = useSelector((state: RootState) => state.auth);
+
+
 
   const onSubmit = (data: FormData) => {
-    const { email, password } = data
-    auth.login({ email, password, rememberMe }, () => {
-      setError('email', {
-        type: 'manual',
-        message: 'Email or Password is invalid'
+    (dispatch as AppDispatch)(loginUser({ email: data.email, password: data.password }))
+      .unwrap()
+      .then((response: { user: any; token: string }) => {
+        console.log('✅ Login successful', response);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        localStorage.setItem('token', response.token);
+        const email = "admin@vuexy.com";
+        const password = "admin";
+
+        auth.login({ email, password, rememberMe }, () => {
+          setError('email', {
+            type: 'manual',
+            message: 'Email or Password is invalid'
+          });
+        });
+
       })
-    })
-  }
+      .catch((error) => {
+        console.error('❌ Login failed:', error);
+      });
+  };
+
+  // const onSubmit = (data: FormData) => {
+  //   const { email, password } = data
+  //   auth.login({ email, password, rememberMe }, () => {
+  //     setError('email', {
+  //       type: 'manual',
+  //       message: 'Email or Password is invalid'
+  //     })
+  //   })
+  // }
 
   const imageSource = skin === 'bordered' ? 'auth-v2-login-illustration-bordered' : 'auth-v2-login-illustration'
 

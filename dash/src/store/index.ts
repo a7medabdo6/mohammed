@@ -1,5 +1,6 @@
 // ** Toolkit imports
 import { configureStore } from '@reduxjs/toolkit'
+import authReducer from 'src/store/apps/auth/authSlice';
 
 // ** Reducers
 import chat from 'src/store/apps/chat'
@@ -11,6 +12,8 @@ import permissions from 'src/store/apps/permissions'
 
 export const store = configureStore({
   reducer: {
+    auth: authReducer,
+
     user,
     chat,
     email,

@@ -22,6 +22,8 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
+import { useDispatch } from 'react-redux'
+import { logoutUser } from 'src/store/apps/auth/authSlice'
 
 interface Props {
   settings: Settings
@@ -55,6 +57,7 @@ const UserDropdown = (props: Props) => {
 
   // ** Vars
   const { direction } = settings
+  const dispatch = useDispatch();
 
   const handleDropdownOpen = (event: SyntheticEvent) => {
     setAnchorEl(event.currentTarget)
@@ -81,9 +84,16 @@ const UserDropdown = (props: Props) => {
       color: 'text.secondary'
     }
   }
+  const logoutUsers = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    dispatch(logoutUser());
+  };
+
 
   const handleLogout = () => {
     logout()
+    logoutUsers()
     handleDropdownClose()
   }
 
